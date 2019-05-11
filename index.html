@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+      <progress value="0" max="100" id="uploader">0%</progress>
+      <input type="file" value="upload" class="custom-file-input" id="portraitFile">
+                  <label class="custom-file-label" for="portraitFile">Choose file</label>
+
+      <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+
+
+             <script>
+            // Initialize Firebase
+            var config = {
+              apiKey: "AIzaSyCfyMLku9dwWDaHhSWmxdCAGJswbQGuZco",
+              authDomain: "final-a798a.firebaseapp.com",
+              databaseURL: "https://final-a798a.firebaseio.com",
+              projectId: "final-a798a",
+              storageBucket: "final-a798a.appspot.com",
+              messagingSenderId: "988844654071"
+            };
+            firebase.initializeApp(config);
+
+            //  get elements
+            var uploader=document.getElementById('uploader');
+             var portraitFile = document.getElementById('portraitFile');
+             console.log("event",portraitFile)
+
+              //listenforfile selection
+             portraitFile.addEventListener('change',function(e){
+                 //get portraitFile
+                 var file=event.target.files[0];
+                 // var portraitURL=portraitFile.value
+
+                 //create a storage usersRef
+                 var storageRef=firebase.storage().ref('photo/'+file.name);
+
+                 //upload files
+                 var task=storageRef.put(file);
+
+                 //upload progress bar
+                 task.on('state_changed',
+                      function progress(snapshot){
+                          var percentage = (snapshot.bytesTransferred/snapshot.totalBytes)*100;
+                          uploader.value=percentage;
+                      },
+
+                      function error(err){
+
+                      },
+
+                      function complete(){
+
+                      }
+                 )
+             })
+
+
+              </script>
+
+    </body>
+
+</html>
